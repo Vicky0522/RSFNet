@@ -1,6 +1,6 @@
 ## RSFNet
 
-Official PyTorch Implementation of ICCV 2023 Paper "RSFNet: A White-Box Image Retouching Approach using Region-Specific Color Filters"
+Official PyTorch Implementation of ICCV 2023 Paper "[RSFNet: A White-Box Image Retouching Approach using Region-Specific Color Filters](https://arxiv.org/abs/2303.08682)"
 
 [![arXiv](https://img.shields.io/badge/arXiv-2212.11613-b31b1b.svg)](https://arxiv.org/abs/2303.08682)
 ![visitors](https://visitor-badge.laobi.icu/badge?page_id=Vicky0522/RSFNet)
