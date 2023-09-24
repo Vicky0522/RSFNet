@@ -5,18 +5,13 @@ Official PyTorch Implementation of ICCV 2023 Paper "[RSFNet: A White-Box Image R
 [![arXiv](https://img.shields.io/badge/arXiv-2212.11613-b31b1b.svg)](https://arxiv.org/abs/2303.08682)
 ![visitors](https://visitor-badge.laobi.icu/badge?page_id=Vicky0522/RSFNet)
 
-<p align="center">
-  <video src="assets/rsfnet-map.mp4" width="1000px">
-</p>
-<p align="center">
-  <video src="assets/rsfnet-saliency.mp4" width="1000px">
-</p>
-<p align="center">
-  <video src="assets/rsfnet-palette.mp4" width="1000px">
-</p>
-<p align="center">
-  <video src="assets/rsfnet-semantic.mp4" width="1000px">
-</p>
+https://github.com/Vicky0522/RSFNet/assets/18029603/7ddb5edb-bfe4-416a-935e-d7e95ad650ec
+
+https://github.com/Vicky0522/RSFNet/assets/18029603/6fa61244-cd48-4562-9cb8-20eef0422d9e
+
+https://github.com/Vicky0522/RSFNet/assets/18029603/821fbf3d-0053-4de3-98a2-f33ea01138b8
+
+https://github.com/Vicky0522/RSFNet/assets/18029603/92a299a0-6e55-4748-ac02-df4920faadfe
 
 ## Requirements
 
