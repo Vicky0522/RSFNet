@@ -1,0 +1,62 @@
+name: rsfnet_saliency_ppr10k
+model_type: RSFNetModel
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test_1:
+    name: test
+    type: SingleImageDataset
+    dataroot_lq: ./samples
+    io_backend:
+      type: disk
+
+    scale: 1
+    mean: 0.5
+    std: 0.5
+
+    save_img: true
+
+# network structures
+network_g:
+  type: RSFNet
+  pretrained: 'torchvision://resnet18'
+  init_weight: false
+  max_down_size: 32
+  complementary_mask: true
+  cache: false
+  backbone:
+    type: 'ResNet'
+    depth: 18
+    num_stages: 4
+    out_indices: [0, 1, 2, 3] # C2, C3, C4, C5
+    frozen_stages: -1
+    style: pytorch
+  neck:
+    type: 'FPN'
+    in_channels: [64, 128, 256, 512]
+    out_channels: 64
+    start_level: 0
+    num_outs: 4
+  head:
+    type: SegRecolorHead
+    num_segs: 1
+    param_channels: 2
+    in_channels: 256
+    stacked_convs: 4
+    param_nums: 11
+    seg_feat_channels: 256
+    with_deform: false
+  graph:
+    type: Renderer_N10
+
+# path
+path:
+  pretrain_network_g: pretrained/xxx.pth
+  strict_load_g: true
+  visualization: results/rsfnet_map_saliency/visualization
+
+# validation settings
+val:
+  save_img: True
+  suffix: ~  # add suffix to saved images, if None, use exp name

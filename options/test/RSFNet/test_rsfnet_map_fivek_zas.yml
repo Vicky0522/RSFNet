@@ -1,0 +1,83 @@
+name: rsfnet_map_fivek_zas
+model_type: RSFNetModel
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test_1:
+    name: Adobe5k
+    type: PairedImageDataset
+    dataroot_gt: datasets/Adobe5k/expertC/
+    dataroot_lq: datasets/Adobe5k/zeroed_as_shot/
+    meta_info_file: datasets/Adobe5k/test.txt
+    io_backend:
+      type: disk
+
+    scale: 1
+    mean: 0.5
+    std: 0.5
+
+    save_img: true
+    batch_size_per_gpu: 1
+
+# network structures
+network_g:
+  type: RSFNet
+  pretrained: 'torchvision://resnet18'
+  max_down_size: 32
+  complementary_mask: false
+  cache: false
+  backbone:
+    type: 'ResNet'
+    depth: 18
+    num_stages: 4
+    out_indices: [0, 1, 2, 3] # C2, C3, C4, C5
+    frozen_stages: -1
+    style: pytorch
+  neck:
+    type: 'FPN'
+    in_channels: [64, 128, 256, 512]
+    out_channels: 64
+    start_level: 0
+    num_outs: 4
+  head:
+    type: SegRecolorHead
+    num_segs: 7
+    param_channels: 10
+    param_nums: 1
+    in_channels: 256
+    stacked_convs: 4
+    use_feature_mean: false
+    seg_feat_channels: 256
+    with_deform: false
+    last_layer_act_cfg:
+      type: sigmoid
+  graph:
+    type: Renderer_N1_K10
+
+# path
+path:
+  pretrain_network_g: pretrained/RSFNet_map_fivek_zas.pth
+  strict_load_g: true
+  visualization: results/rsfnet_map_fivek_zas/visualization
+
+# validation settings
+val:
+  save_img: true
+  save_mask: false
+  save_cache: false
+  save_params: false
+  suffix: ~  # add suffix to saved images, if None, use exp name
+  pbar: true
+  time_cost: true
+  save_metrics_per_image: false
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 2
+      test_y_channel: false
+    ssim:
+      type: calculate_ssim
+      crop_border: 2
+      test_y_channel: false

@@ -1,0 +1,84 @@
+name: rsfnet_maskin_saliency_fivek_zas
+model_type: RSFNetMaskInModel
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test_1:
+    name: Adobe5k
+    type: RSFNetDataset
+    dataroot_gt: datasets/Adobe5k/expertC/
+    dataroot_lq: datasets/Adobe5k/zeroed_as_shot/
+    dataroot_mask: datasets/Adobe5k/saliency
+    meta_info_file: datasets/Adobe5k/test.txt
+    filename_tmpl: '{}'
+    filename_tmpl_mask: '{}_mask'
+    mask_num: 1
+    io_backend:
+      type: disk
+
+    scale: 1
+    mean: 0.5
+    std: 0.5
+
+    save_img: true
+
+# network structures
+network_g:
+  type: RSFNet_MaskIn
+  pretrained: 'torchvision://resnet18'
+  max_down_size: 32
+  complementary_mask: true
+  cache: false
+  backbone:
+    type: 'ResNet'
+    depth: 18
+    in_channels: 4
+    num_stages: 4
+    stem_strides: [2, 2]
+    strides: [1, 2, 2, 2]
+    dilations: [1, 1, 1, 1]
+    out_indices: [0, 1, 2, 3] # C2, C3, C4, C5
+    frozen_stages: -1
+    style: pytorch
+  neck:
+    type: 'FPN'
+    in_channels: [64, 128, 256, 512]
+    out_channels: 64
+    start_level: 0
+    num_outs: 4
+  head:
+    type: ParamRecolorHead
+    param_channels: 2
+    param_nums: 11
+    in_channels: 256
+    stacked_convs: 4
+    seg_feat_channels: 256
+    feat_down_scale: 1
+    cate_down_scale: 2
+    use_feature_mean: true
+    with_deform: false
+  graph:
+    type: Renderer_N10
+
+# path
+path:
+  #pretrain_network_g: experiments/xxx.pth
+  strict_load_g: true
+  visualization: results/rsfnet_maskin_saliency_fivek_zas/visualization
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+  pbar: true
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 2
+      test_y_channel: false
+    ssim:
+      type: calculate_ssim
+      crop_border: 2
+      test_y_channel: false

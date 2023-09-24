@@ -1,0 +1,14 @@
+__pycache__
+*.png
+*.jpg
+*.mp4
+*.pth
+basicsr.egg-info/
+results
+tmp
+experiments
+tb_logger
+basicsr/ops
+*egg-info*
+build
+dist

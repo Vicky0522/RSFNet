@@ -1,0 +1,89 @@
+name: rsfnet_palette_fivek_zwc
+model_type: RSFNetModel
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test_1:
+    name: Adobe5k
+    type: RSFNetDataset
+    dataroot_gt: datasets/Adobe5k/expertC/
+    dataroot_lq: datasets/Adobe5k/zeroed_with_expertC/
+    dataroot_mask: datasets/Adobe5k/palette/
+    meta_info_file: datasets/Adobe5k/test.txt
+    mask_num: 5
+    io_backend:
+      type: disk
+
+    scale: 1
+    mean: 0.5
+    std: 0.5
+
+    save_img: false
+    batch_size_per_gpu: 1
+
+# network structures
+network_g:
+  type: RSFNet
+  pretrained: 'torchvision://resnet18'
+  max_down_size: 32
+  complementary_mask: false
+  cache: false
+  backbone:
+    type: 'ResNet'
+    depth: 18
+    num_stages: 4
+    stem_strides: [2, 2]
+    strides: [1, 2, 2, 2]
+    dilations: [1, 1, 1, 1]
+    out_indices: [0, 1, 2, 3] # C2, C3, C4, C5
+    frozen_stages: -1
+    style: pytorch
+  neck:
+    type: 'FPN'
+    in_channels: [64, 128, 256, 512]
+    out_channels: 64
+    start_level: 0
+    num_outs: 4
+  head:
+    type: SegRecolorHead
+    num_segs: 5
+    param_channels: 5
+    param_nums: 11
+    in_channels: 256
+    stacked_convs: 4
+    seg_feat_channels: 256
+    feat_down_scale: 1
+    cate_down_scale: 2
+    mask_up_scale: [1, 1, 1, 1]
+    use_feature_mean: true
+    with_deform: false
+    last_layer_act_cfg:
+      type: sigmoid
+  graph:
+    type: Renderer_N10
+
+# path
+path:
+  pretrain_network_g: pretrained/RSFNet_palette_fivek_zwc.pth
+  strict_load_g: true
+  visualization: results/rsfnet_palette_fivek_zwc/visualization
+
+# validation settings
+val:
+  save_img: true
+  save_mask: true
+  save_params: false
+  suffix: ~  # add suffix to saved images, if None, use exp name
+  pbar: true
+  time_cost: true
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 2
+      test_y_channel: false
+    ssim:
+      type: calculate_ssim
+      crop_border: 2
+      test_y_channel: false
