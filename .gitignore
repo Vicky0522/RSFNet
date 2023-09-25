@@ -7,7 +7,6 @@ results
 tmp
 experiments
 tb_logger
-basicsr/ops
 *egg-info*
 build
 dist
