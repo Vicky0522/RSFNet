@@ -37,8 +37,11 @@ class PaletteGenerate(object):
         mask_distance, mask_label = torch.min(distance, dim=1, keepdim=True)
         mask = torch.zeros((1,self.k,x.size(2),x.size(3)), dtype=torch.float32).to(x.device)
         for i in range(self.k):
-            max_dist = torch.max(mask_distance[mask_label==i])
-            mask[:,i:i+1,...] = torch.exp(-torch.sum(torch.pow(x - means[i:i+1,...],2),dim=1)/(2*torch.pow(max_dist/2.,2)))
+            try:
+                max_dist = torch.max(mask_distance[mask_label==i])
+                mask[:,i:i+1,...] = torch.exp(-torch.sum(torch.pow(x - means[i:i+1,...],2),dim=1)/(2*torch.pow(max_dist/2.,2)))
+            except:
+                pass
         return mask, palette_img
 
 

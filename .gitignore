@@ -10,3 +10,4 @@ tb_logger
 *egg-info*
 build
 dist
+.DS_Store

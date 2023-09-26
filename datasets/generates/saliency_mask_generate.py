@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import time
 import argparse
-import tqdm
+from tqdm import tqdm
 
 import torch
 import torch.nn.functional as F
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     for filepath in filelist:
         # read images
         image = cv2.imread(os.path.join(image_path, filepath))
-        image = img2tensor(image, True).to("cuda:{}".format(gpu_id))
+        image = img2tensor(image, True).to("cuda:{}".format(args.gpu_id)).unsqueeze(0)/255.
 
         result = model.forward(image)
         result = tensor2img(torch.cat([result,]*3,dim=1), False, min_max=(0,1))
