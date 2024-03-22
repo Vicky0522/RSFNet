@@ -71,7 +71,7 @@ You can also generate masks from the scratch using the following steps:
 
 #### Generate saliency masks
 
-Download pre-trained models from [PoolNet](https://github.com/backseason/PoolNet). Then run:
+Download pre-trained model [PoolNet-ResNet50 w/o edge model](https://drive.google.com/open?id=12Zgth_CP_kZPdXwnBJOu4gcTyVgV2Nof) from [PoolNet](https://github.com/backseason/PoolNet). Then run:
 ```
 cd datasets/generate
 python saliency_mask_generate.py --input_dir /path_to_your_input/ --output_dir /path_to_your_output/ --gpu_id 0 --weight /path_to_weight/
